@@ -1,0 +1,11 @@
+jtype: Flow
+version: '1'
+with:
+  port: 51000
+executors:
+  - name: demo
+    uses:
+      jtype: DemoEncoder
+      metas:
+        py_modules:
+          - executors/demo.py
