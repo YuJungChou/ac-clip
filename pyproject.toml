@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ac-clip"
+version = "0.1.0"
+description = ""
+authors = ["AllenChou <f1470891079@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.9"
+clip-server = {version = "~0.4.11", optional = true}
+clip-client = {version = "~0.4.11", optional = true}
+transformers = {version = "~4.15", optional = true}
+
+[tool.poetry.extras]
+all = ["clip-server", "clip-client", "transformers"]
+server = ["clip-server", "transformers"]
+client = ["clip-client"]
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
