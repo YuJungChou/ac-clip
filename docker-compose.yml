@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  ac-clip-transformers:
+    image: ac-clip-transformers:0.1.0
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ac-clip-transformers
+    environment:
+      - TRANSFORMERS_CACHE=./models/
+      - DATASETS_ROOT=./data/
+      - MODELS_ROOT=./models/
+    ports:
+        - "51000:51000"
+    networks:
+        - ac-clip-network
+    volumes:
+        - /etc/timezone:/etc/timezone:ro
+        - /etc/localtime:/etc/localtime:ro
+        - ./data:/app/data
+        - ./models:/app/models
+    tty: true
+
+networks:
+  ac-clip-network:
+      name: ac-clip-network
