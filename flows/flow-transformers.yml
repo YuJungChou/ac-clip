@@ -1,0 +1,16 @@
+jtype: Flow
+version: '1'
+with:
+  port: 51000
+executors:
+  - name: transformers_as_service
+    uses:
+      jtype: TransformersEncoder
+      with:
+        model_name: 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+        device: cpu
+        num_worker_preprocess: 1
+        batch_size: 16
+      metas:
+        py_modules:
+          - executors/transformers_torch.py

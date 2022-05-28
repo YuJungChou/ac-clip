@@ -22,3 +22,9 @@ r = c.encode(['First do it', 'then do it right', 'then do it better'])
 print(r.shape)  # [3, 512]
 ```
 
+
+## Transformers As Service
+
+```shell
+$ python -m clip_server flows/flow-transformers.yml
+```
