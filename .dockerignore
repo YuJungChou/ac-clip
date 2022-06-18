@@ -1,4 +1,11 @@
 .git
+.vscode
+
 clip-as-service
 data/*
+log/*
 models/*
+tmp/*
+test.*
+ttest.*
+tttest.*
