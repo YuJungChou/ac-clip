@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   ac-clip-transformers:
-    image: ac-clip-transformers:0.1.0
+    image: dockhardman/ac-clip:0.2.0
     build:
       context: ./
       dockerfile: Dockerfile
@@ -10,8 +10,10 @@ services:
       - TRANSFORMERS_CACHE=./models/
       - DATASETS_ROOT=./data/
       - MODELS_ROOT=./models/
+      - LOG_ROOT=./log/
     ports:
         - "51000:51000"
+        - "51001:51001"
     networks:
         - ac-clip-network
     deploy:
@@ -21,8 +23,14 @@ services:
     volumes:
         - /etc/timezone:/etc/timezone:ro
         - /etc/localtime:/etc/localtime:ro
+        - ./config.py:/app/config.py
+        - ./executors:/app/executors
+        - ./flows:/app/flows
+        - ./helper:/app/helper
+        - ./http_server.py:/app/http_server.py
         - ./data:/app/data
         - ./models:/app/models
+        - ./log:/app/log
     tty: true
 
 networks:
