@@ -1,2 +1,4 @@
+.git
+clip-as-service
 data/*
-model/*
+models/*
