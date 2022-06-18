@@ -6,12 +6,21 @@ AC clip server
 
 ### Start Server
 
+#### 1. cocker-compose
 ```shell
-$ python -m clip_server flows/flow-demo.yml
+$ docker-compose up -d
+```
+
+#### 2. clip_server
+
+```shell
+$ python -m clip_server flows/flow-transformers.yml
 ```
 
 
 ### Client Query
+
+#### 1. GRPC
 
 ```python
 from clip_client import Client
@@ -22,9 +31,14 @@ r = c.encode(['First do it', 'then do it right', 'then do it better'])
 print(r.shape)  # [3, 512]
 ```
 
+#### 2. HTTP
 
-## Transformers As Service
+```python
+import requests
 
-```shell
-$ python -m clip_server flows/flow-transformers.yml
+res = requests.post(
+    'http://0.0.0.0:51001',
+    json=['First do it', 'then do it right', 'then do it better']
+)
+print(len(res.json()))  # 3
 ```
