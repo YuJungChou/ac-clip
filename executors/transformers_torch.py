@@ -4,8 +4,9 @@ from typing import Optional, Text
 import numpy as np
 import torch
 from jina import Executor, requests, DocumentArray, monitor
-from transformers import AutoTokenizer, AutoModel, BertTokenizerFast, BertModel
 from transformers.modeling_outputs import ModelOutput
+
+from helper import load_transformers_model
 
 
 class TransformersEncoder(Executor):
@@ -26,9 +27,10 @@ class TransformersEncoder(Executor):
 
         self._batch_size = batch_size
 
-        self._tokenizer: 'BertModel' = AutoTokenizer.from_pretrained(model_name)
-        self._model: 'BertTokenizerFast' = AutoModel.from_pretrained(model_name)
-
+        self._model, self._tokenizer = load_transformers_model(
+            model_name=model_name,
+            device=self._device
+        )
         self._pool = ThreadPool(processes=num_worker_preprocess)
 
     def mean_pooling(
@@ -53,13 +55,14 @@ class TransformersEncoder(Executor):
     def embedding(
         self, docs: 'DocumentArray'
     ) -> 'torch.Tensor':
-        """"""
+        """Embedding texts of DocumentArray."""
 
         encoded_input = self._tokenizer(
             docs.texts, padding=True, truncation=True, return_tensors='pt'
-        )
+        ).to(self._device)
+
         with torch.inference_mode():
-            model_output = self._model(**encoded_input)
+            model_output: 'ModelOutput' = self._model(**encoded_input)
 
         # Perform pooling. In this case, max pooling.
         texts_embeddings = self.mean_pooling(
@@ -69,11 +72,13 @@ class TransformersEncoder(Executor):
 
     @monitor()
     def _preprocess_texts(self, docs: 'DocumentArray'):
+        """Preprocess texts."""
+
         return docs
 
     @requests
     async def encode(self, docs: 'DocumentArray', **kwargs):
-        """"""
+        """Encode the Documents."""
 
         with torch.inference_mode():
 
